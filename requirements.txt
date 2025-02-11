@@ -1,0 +1,9 @@
+httpx
+praw
+tweepy
+rich
+pillow
+argparse
+logging
+threading
+functools

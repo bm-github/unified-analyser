@@ -1,2 +1,4 @@
-/chat_history
-/social_cache
+/data
+*.env
+*.log
+*.json
