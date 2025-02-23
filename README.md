@@ -1,81 +1,94 @@
-# Unified Social Media Analyser
+# 🚀 Social Media Analyser
 
-## Overview
-The **Unified Social Media Analyser** is a tool designed to collect and analyze user activity across multiple social media platforms. It integrates with **Twitter**, **Reddit**, and **HackerNews** to fetch posts, comments, and media for in-depth analysis.
+## 📌 Overview
+The **Social Media Analyser** is a powerful Python-based tool that aggregates and analyses user activity across multiple social media platforms, including **Twitter, Reddit, Hacker News, and Bluesky**. With AI-driven insights, it provides a comprehensive look into user engagement, trends, and media content.
 
-## Features
-- **Multi-platform Analysis**: Collects data from Twitter, Reddit, and HackerNews.
-- **Rate Limit Handling**: Detects and manages API rate limits gracefully.
-- **Media Processing**: Downloads and analyzes images.
-- **User Interaction**: Supports both command-line prompts and JSON input.
-- **Data Caching**: Stores fetched data for efficient retrieval.
-- **Comprehensive Reports**: Generates analytical reports based on user queries.
+## 🌟 Features
+✅ Multi-platform data collection (Twitter, Reddit, Hacker News, Bluesky)  
+✅ AI-powered analysis with OpenRouter API and Google Gemini  
+✅ Image analysis for media content  
+✅ Cross-account comparison  
+✅ Rate limit handling with informative feedback  
+✅ Caching system for efficient data retrieval  
+✅ Interactive CLI with rich formatting  
+✅ Supports both interactive and programmatic usage  
 
-## Dependencies
-The project requires the following Python libraries:
-- `httpx`
-- `tweepy`
-- `praw`
-- `rich`
-- `PIL` (Pillow)
-- `base64`
-- `argparse`
-- `hashlib`
-- `json`
-- `logging`
-- `threading`
-- `datetime`
-- `functools`
-
-Ensure you have these installed before running the program.
-
-## Installation
-Clone the repository and install the required dependencies:
+## 🛠 Installation
+### Prerequisites
+Ensure you have **Python 3.8+** installed. Then, install the dependencies:
 
 ```sh
 pip install -r requirements.txt
 ```
 
-## Configuration
-Set up API credentials as environment variables:
-
+### Environment Variables
+Set up the required API keys:
 ```sh
-export TWITTER_BEARER_TOKEN="your_twitter_bearer_token"
-export REDDIT_CLIENT_ID="your_reddit_client_id"
-export REDDIT_CLIENT_SECRET="your_reddit_client_secret"
-export REDDIT_USER_AGENT="your_reddit_user_agent"
-export OPENROUTER_API_KEY="your_openrouter_api_key"
+export TWITTER_BEARER_TOKEN='your_token_here'
+export REDDIT_CLIENT_ID='your_client_id'
+export REDDIT_CLIENT_SECRET='your_client_secret'
+export REDDIT_USER_AGENT='your_user_agent'
+export BLUESKY_IDENTIFIER='your_bluesky_handle'
+export BLUESKY_APP_SECRET='your_bluesky_secret'
+export OPENROUTER_API_KEY='your_openrouter_api_key'
 ```
 
-## Usage
-### Interactive Mode
-Run the script interactively to analyze social media activity:
+Optional:
+```sh
+export ANALYSIS_MODEL='google/gemini-2.0-flash-001'  # Default AI model
+export IMAGE_ANALYSIS_MODEL='google/gemini-2.0-flash-001'  # Default AI model
+```
 
+## 🚀 Usage
+### Interactive Mode
+Run the script without arguments to start an interactive session:
 ```sh
 python unified-analyser.py
 ```
+📌 Commands:
+- Select platform(s) for analysis
+- Enter usernames (comma-separated)
+- Input analysis queries
+- Type `refresh` to force data refresh
+- Type `exit` to quit
 
-### JSON Input Mode
-To use JSON input via stdin:
-
+### Programmatic Mode (Batch Processing)
+You can provide input via JSON:
 ```sh
-echo '{"platforms": {"twitter": ["user1"], "reddit": ["user2"]}, "query": "Analyze user activity", "format": "markdown"}' | python unified-analyser.py --stdin
+echo '{"platforms": {"twitter": ["user1"], "reddit": ["user2"]}, "query": "Analyse engagement", "format": "markdown"}' | python unified-analyser.py --stdin
 ```
 
-### Output Format
-The output can be saved in `markdown` or `json` format using the `--format` flag.
+### Command-line Arguments
+- `--stdin` : Reads JSON input from standard input
+- `--format [json|markdown]` : Specifies the output format
 
-```sh
-python unified-analyser.py --format json
-```
+## 📊 Output
+Results are saved in `data/outputs/` with timestamps:
+- `analysis_YYYYMMDD_HHMMSS.md` for markdown
+- `analysis_YYYYMMDD_HHMMSS.json` for JSON
 
-## Error Handling
-- Handles API rate limits with retry mechanisms.
-- Logs errors to `analyser.log` for debugging.
-- Provides user-friendly error messages for missing API keys or connectivity issues.
+## ⚡ Cache System
+- Data cached in `data/cache/` for **24 hours**
+- Media files stored in `data/media/`
+- Format: `{platform}_{username}.json`
 
-## License
-This project is licensed under the MIT License.
+## 🔍 Error Handling
+- **Rate limits**: Displays reset time and wait duration
+- **API errors**: Detailed logs in `analyser.log`
+- **Retries**: 3 attempts for media downloads
 
-## Contributing
-Feel free to submit issues or pull requests to improve the project!
+## 🤖 AI Models
+- **Text Analysis**: Google Gemini 2.0 Flash (default)
+- **Image Analysis**: Google Gemini 2.0 Flash
+- **Configurable via** `ANALYSIS_MODEL` env var
+
+## 🔒 Security
+🔹 API keys required for all platforms  
+🔹 Local caching of sensitive data  
+🔹 No external data storage  
+
+## 🤝 Contributing
+We welcome contributions! Feel free to submit pull requests or report issues.
+
+## 📜 Licence
+This project is licensed under the **MIT Licence**.
