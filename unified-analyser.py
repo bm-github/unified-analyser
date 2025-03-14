@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import time
 import hashlib
 import logging
 import argparse
@@ -24,7 +23,7 @@ from PIL import Image
 from atproto import Client, exceptions
 
 logging.basicConfig(
-    level=logging.ERROR,
+    level=logging.WARN,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.FileHandler('analyser.log'), logging.StreamHandler()]
 )
@@ -63,7 +62,6 @@ class SocialAnalyser:
     def bluesky(self):
         if not hasattr(self, '_bluesky_client'):
             try:
-                # Create new client and session
                 client = Client()
                 client.login(
                     os.environ['BLUESKY_IDENTIFIER'],
@@ -259,7 +257,7 @@ class SocialAnalyser:
             response = self.openrouter.post(
                 "/chat/completions",
                 json={
-                    "model": os.getenv('IMAGE_ANALYSIS_MODEL', "google/gemini-2.0-flash-001"),
+                    "model": os.getenv('IMAGE_ANALYSIS_MODEL'),
                     "messages": [{
                         "role": "user",
                         "content": [
@@ -495,7 +493,6 @@ class SocialAnalyser:
                 logger.warning("No image reference found")
                 return None
 
-            # Extract CID - AT Protocol uses 'link' not '$link'
             cid = getattr(img_ref.ref, 'link', None)
             if not cid:
                 logger.warning(f"Missing CID in image ref")
@@ -588,13 +585,13 @@ class SocialAnalyser:
             analysis_components = []
             
             if media_analysis:
-                analysis_components.append("## Media Analysis (Google Gemini)\n" + "\n".join(f"- {m}" for m in media_analysis))
+                analysis_components.append("## Media Analysis using {image_model}\n" + "\n".join(f"- {m}" for m in media_analysis))
             
             if collected_data:
-                analysis_components.append("## Text Analysis\n" + "\n".join(collected_data))
+                analysis_components.append("## Text Analysis using {model}\n" + "\n".join(collected_data))
 
             prompt = f"Analysis request: {query}\n\n" + "\n\n".join(analysis_components)
-            model = os.getenv('ANALYSIS_MODEL', "google/gemini-2.0-flash-001")
+            model = os.getenv('ANALYSIS_MODEL')
             
             analysis_task = self.progress.add_task(f"[magenta]Final analysis...", total=None)
             try:
@@ -604,7 +601,7 @@ class SocialAnalyser:
                         "json_data": {
                             "model": model,
                             "messages": [
-                                {"role": "system", "content": "Please provide a clear and concise analysis considering both the text content and any images present."},
+                                {"role": "system", "content": "You are analyzing social media user activity. Focus on key patterns in behavior, interests, semantics, and communication style. Provide concise, data-driven insights based only on the provided posts."},
                                 {"role": "user", "content": prompt}
                             ]
                         }
@@ -674,7 +671,7 @@ class SocialAnalyser:
     def _call_openrouter(self, json_data: dict):
         try:
             response = self.openrouter.post("/chat/completions", json=json_data)
-            response.raise_for_status()  # This will catch 4xx/5xx errors
+            response.raise_for_status()
             self._analysis_response = response
         except Exception as e:
             logger.error(f"OpenRouter API Error: {str(e)}")
@@ -712,17 +709,17 @@ class SocialAnalyser:
         
         while True:
             self.console.print("\n[bold cyan]Options:[/bold cyan]")
-            self.console.print("1. Twitter\n2. Reddit\n3. HackerNews\n4. Bluesky\n5. Custom\n6. Exit")
+            self.console.print("1. Twitter\n2. Reddit\n3. HackerNews\n4. Bluesky\n5. Cross-Platform\n6. Exit")
         
             choice = Prompt.ask("Select").strip()
-            if choice == "6":  # Changed from 5 to 6 for exit
+            if choice == "6":
                 break
                 
             try:
                 platforms = {}
                 
                 # Twitter selection
-                if choice in ["1", "5"]:  # Added 5 to allow Twitter in Custom
+                if choice in ["1", "5"]:
                     twitter_users = Prompt.ask("Twitter usernames (comma-separated, without @)", default="").strip()
                     if twitter_users:
                         platforms['twitter'] = [u.strip() for u in twitter_users.split(',') if u.strip()]

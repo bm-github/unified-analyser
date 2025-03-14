@@ -5,7 +5,7 @@ The **Social Media Analyser** is a powerful Python-based tool that aggregates an
 
 ## 🌟 Features
 ✅ Multi-platform data collection (Twitter, Reddit, Hacker News, Bluesky)  
-✅ AI-powered analysis with OpenRouter API and Google Gemini  
+✅ AI-powered analysis with OpenRouter API  
 ✅ Image analysis for media content  
 ✅ Cross-account comparison  
 ✅ Rate limit handling with informative feedback  
@@ -35,8 +35,8 @@ export OPENROUTER_API_KEY='your_openrouter_api_key'
 
 Optional:
 ```sh
-export ANALYSIS_MODEL='google/gemini-2.0-flash-001'  # Default AI model
-export IMAGE_ANALYSIS_MODEL='google/gemini-2.0-flash-001'  # Default AI model
+export ANALYSIS_MODEL='your_preferred_model'  # OpenRouter-compatible model
+export IMAGE_ANALYSIS_MODEL='your_preferred_model'  # OpenRouter-compatible model
 ```
 
 ## 🚀 Usage
@@ -51,6 +51,7 @@ python unified-analyser.py
 - Input analysis queries
 - Type `refresh` to force data refresh
 - Type `exit` to quit
+- Type `help` to display available commands
 
 ### Programmatic Mode (Batch Processing)
 You can provide input via JSON:
@@ -75,17 +76,24 @@ Results are saved in `data/outputs/` with timestamps:
 ## 🔍 Error Handling
 - **Rate limits**: Displays reset time and wait duration
 - **API errors**: Detailed logs in `analyser.log`
-- **Retries**: 3 attempts for media downloads
+- **Media handling**: Full download with proper authentication
 
-## 🤖 AI Models
-- **Text Analysis**: Google Gemini 2.0 Flash (default)
-- **Image Analysis**: Google Gemini 2.0 Flash
-- **Configurable via** `ANALYSIS_MODEL` env var
+## 🤖 AI Analysis
+The tool uses OpenRouter API for:
+- **Text Analysis**: Configurable via `ANALYSIS_MODEL` env var
+- **Image Analysis**: Configurable via `IMAGE_ANALYSIS_MODEL` env var
+- Image analysis automatically resizes large images and provides contextual insights
+
+## 📸 Media Processing
+- Downloads and stores media locally
+- Supports JPEG, PNG, GIF, and WEBP formats
+- Platform-specific authentication for media access
+- Proper CDN handling for Bluesky images
 
 ## 🔒 Security
 🔹 API keys required for all platforms  
-🔹 Local caching of sensitive data  
-🔹 No external data storage  
+🔹 Local caching of data  
+🔹 Secure authentication for protected content  
 
 ## 🤝 Contributing
 We welcome contributions! Feel free to submit pull requests or report issues.
